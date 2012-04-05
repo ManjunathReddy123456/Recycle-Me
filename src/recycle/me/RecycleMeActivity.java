@@ -10,20 +10,20 @@ import com.google.android.maps.*;
 
 public class RecycleMeActivity extends MapActivity implements OnClickListener {
 
-	private Button btnSat;
 	private Button btnMap;
 	private MapView mapView;
+	private boolean flag = true;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.googlemap);
-		
-		btnSat = (Button) findViewById(R.id.btnSat);
+
 		btnMap = (Button) findViewById(R.id.btnMap);
 		mapView = (MapView) findViewById(R.id.mapview);
-		
+
 		mapView.setBuiltInZoomControls(true);
-		btnSat.setOnClickListener(this);
+		mapView.setSatellite(false);
 		btnMap.setOnClickListener(this);
 	}
 
@@ -33,12 +33,19 @@ public class RecycleMeActivity extends MapActivity implements OnClickListener {
 	}
 
 	public void onClick(View v) {
-		if (v.getId() == R.id.btnSat) {
+		// to sat
+		if (flag) {
+			btnMap.setText("Map");
 			mapView.setSatellite(true);
-			Toast.makeText(this, "Switched to satellite view", Toast.LENGTH_SHORT).show();
-		} else if (v.getId() == R.id.btnMap) {
+			Toast.makeText(this, "Switched to satellite view",
+					Toast.LENGTH_SHORT).show();
+			// to map
+		} else if (!flag) {
+			btnMap.setText("Satellite");
 			mapView.setSatellite(false);
-			Toast.makeText(this, "Switched to map view", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Switched to map view", Toast.LENGTH_SHORT)
+					.show();
 		}
+		flag = !flag;
 	}
 }
