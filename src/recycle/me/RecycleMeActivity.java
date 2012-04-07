@@ -1,5 +1,8 @@
 package recycle.me;
 
+import java.util.List;
+
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,6 +28,28 @@ public class RecycleMeActivity extends MapActivity implements OnClickListener {
 		mapView.setBuiltInZoomControls(true);
 		mapView.setSatellite(false);
 		btnMap.setOnClickListener(this);
+		
+		List<Overlay> mapOverlays = mapView.getOverlays();
+		Drawable drawable = this.getResources().getDrawable(R.drawable.binmarker);
+		
+		BinItemizedOverlay bio = new BinItemizedOverlay(drawable, this);
+		
+		GeoPoint point = new GeoPoint(46484921, 30734484);
+		OverlayItem overlayitem = new OverlayItem(point, "Hola, Mundo!", "I'm in Odessa!");
+		
+		bio.addOverlay(overlayitem);
+		mapOverlays.add(bio);
+		//bio.onTap(0);
+		
+		MapController mMapController = mapView.getController();
+		
+		// Координаты пишутся без точки после первых двух чисел
+		// center to city park
+		mMapController.animateTo((new GeoPoint(46484921, 30734484)));
+		 
+		//1 is world view, 21 is the tightest zoom possible
+		mMapController.setZoom(15);
+		mapView.invalidate();
 	}
 
 	@Override
