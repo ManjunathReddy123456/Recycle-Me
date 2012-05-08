@@ -17,8 +17,9 @@ import com.google.android.maps.OverlayItem;
 
 @SuppressWarnings("rawtypes")
 public class BinItemizedOverlay extends ItemizedOverlay {
-	private static int lat;
-	private static int lng;
+	public static int lat;
+	public static int lng;
+	static boolean hasPoint = false;
 	private GeoPoint p;
 
 	private ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
@@ -51,12 +52,42 @@ public class BinItemizedOverlay extends ItemizedOverlay {
 		dialog.setTitle(item.getTitle());
 		dialog.setMessage(item.getSnippet() + "\n" + "lat: " + lat + "\n"
 				+ "long: " + lng);
+		
 		dialog.setNeutralButton("Gotcha",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						dialog.cancel();
 					}
 				});
+		dialog.setPositiveButton("Void bin", new DialogInterface.OnClickListener() {
+			
+			public void onClick(DialogInterface dialog, int which) {
+				Toast.makeText(mContext, "Bin cleared", Toast.LENGTH_SHORT).show();
+			}
+		});
+		
+		dialog.setNegativeButton("Delete bin", new DialogInterface.OnClickListener() {
+			
+			public void onClick(DialogInterface dialog, int which) {
+				AlertDialog.Builder confirm = new AlertDialog.Builder(mContext);
+				confirm.create();
+				confirm.setTitle("Are you sure?");
+				confirm.setMessage("Delete %binname%?");
+				confirm.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+					
+					public void onClick(DialogInterface dialog, int which) {
+						Toast.makeText(mContext, "Bin deleted", Toast.LENGTH_SHORT);
+					}
+				});
+				
+				confirm.setNegativeButton("No", new DialogInterface.OnClickListener() {
+					
+					public void onClick(DialogInterface dialog, int which) {
+						Toast.makeText(mContext, "Well..", Toast.LENGTH_SHORT);
+					}
+				});
+			}
+		});
 		dialog.show();
 		return true;
 	}
@@ -70,10 +101,11 @@ public class BinItemizedOverlay extends ItemizedOverlay {
 
 			lat = (int) (p.getLatitudeE6());
 			lng = (int) (p.getLongitudeE6());
-			Log.i("Jelly", "Latitude: " + lat + "Longitude: " + lng);
-			Toast.makeText(mContext,
-					"Latitude: " + lat + "\nLongitude: " + lng,
-					Toast.LENGTH_SHORT).show();
+			hasPoint = true;
+			Log.i("GeoPoint", "Latitude: " + lat + " Longitude: " + lng);
+//			Toast.makeText(mContext,
+//					"Latitude: " + lat + "\nLongitude: " + lng,
+//					Toast.LENGTH_SHORT).show();
 		}
 		return false;
 	}
